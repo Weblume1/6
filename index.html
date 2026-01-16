@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C&C Maintenance | 2026 Industrial HQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        body { background-color: #050505; color: #ffffff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.5s ease; border-radius: 2.5rem; }
+        .logo-circle { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(59, 130, 246, 0.5); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+        
+        .marquee-container { overflow: hidden; display: flex; padding: 2rem 0; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+        .marquee-content { display: flex; gap: 1.5rem; animation: scroll 50s linear infinite; }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 0.75rem)); } }
+
+        .service-pod { min-width: 320px; padding: 2.5rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.5rem; position: relative; overflow: hidden; }
+        .service-pod::after { content: ''; position: absolute; top: 0; right: 0; width: 40px; height: 40px; background: linear-gradient(45deg, transparent 50%, rgba(59, 130, 246, 0.2) 50%); }
+
+        /* UNIFORM PHOTO GRID STYLES */
+        .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 8rem; }
+        .photo-card { position: relative; aspect-ratio: 1/1; overflow: hidden; border-radius: 1.5rem; background: #111; border: 1px solid rgba(255,255,255,0.05); }
+        .photo-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.8s; }
+        .photo-card:hover img { opacity: 1; transform: scale(1.08); }
+        .photo-card:hover { border-color: rgba(59, 130, 246, 0.5); }
+
+        #contact-page, #services-view { display: none; }
+        #contact-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 5, 0.98); z-index: 100; backdrop-filter: blur(20px); }
+        
+        .click-me-tile { animation: pulse-glow 2.5s infinite ease-in-out; border: 1px solid rgba(59, 130, 246, 0.3); }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 10px rgba(59, 130, 246, 0.1); } 50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.4); } }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+
+    <!-- NAVIGATION -->
+    <nav class="flex justify-between items-center mb-16 max-w-7xl mx-auto relative z-50">
+        <div class="flex items-center gap-4 cursor-pointer" onclick="toggleView('home')">
+            <img src="Logo.jpg" alt="Logo" class="logo-circle">
+            <div class="text-3xl font-black tracking-tighter uppercase">C&C<span class="text-blue-500">.</span></div>
+        </div>
+        <div class="flex gap-6 items-center">
+            <button onclick="toggleView('services')" class="text-[10px] font-black uppercase tracking-[0.3em] hover:text-blue-500 transition">Services</button>
+            <button onclick="toggleContact()" class="bg-blue-600 hover:bg-blue-500 px-8 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition">Initiate Service</button>
+        </div>
+    </nav>
+
+    <!-- HOME VIEW -->
+    <div id="home-view">
+        <main class="max-w-7xl mx-auto">
+            <h1 class="text-7xl md:text-[10rem] font-black tracking-tighter uppercase leading-[0.8] mb-16 italic text-center">Grit <br>& <span class="text-blue-500">Glory.</span></h1>
+
+            <section class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-32 items-start">
+                <div class="md:col-span-8 space-y-8">
+                    <h2 class="text-5xl md:text-6xl font-black uppercase tracking-tighter italic">The <span class="text-blue-500">Durban</span> Legacy.</h2>
+                    <div class="space-y-6 text-xl font-light leading-relaxed text-gray-300">
+                        <p>C&C Maintenance stands as the premier industrial force across the <span class="text-white font-bold">Greater Durban Region</span>. Founded on the principle of Uncompromising Quality, we have evolved into a multi-disciplinary powerhouse.</p>
+                        <p>In 2026, the demand for precision structural work and smart-system automation has never been higher. Our team operates at the intersection of heavy industrial labor and technical mastery, ensuring that every project is a testament to our legacy of reliability.</p>
+                    </div>
+                </div>
+                <div class="md:col-span-4 grid grid-cols-1 gap-6">
+                    <div class="glass p-8 border-l-4 border-blue-500">
+                        <h4 class="text-xs font-black uppercase tracking-[0.3em] mb-2 text-blue-500">Vision</h4>
+                        <p class="text-sm opacity-60 italic">To provide a singular, elite-tier solution for all structural, mechanical, and aesthetic maintenance needs.</p>
+                    </div>
+                    <div class="glass p-8 border-l-4 border-white">
+                        <h4 class="text-xs font-black uppercase tracking-[0.3em] mb-2">Standard</h4>
+                        <p class="text-sm opacity-60 italic">Every project is a signature of our reliability. We operate 24/7 because maintenance never sleeps.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- MARQUEE (Moved above photos) -->
+            <div class="marquee-container mb-12">
+                <div class="marquee-content" id="marquee">
+                    <div class="service-pod"><div class="text-blue-500 font-black mb-2 uppercase text-[10px]">01</div><h4 class="text-xl font-bold uppercase tracking-tight">Building & Alterations</h4></div>
+                    <div class="service-pod"><div class="text-blue-500 font-black mb-2 uppercase text-[10px]">02</div><h4 class="text-xl font-bold uppercase tracking-tight">Carpentry</h4></div>
+                    <div class="service-pod"><div class="text-blue-500 font-black mb-2 uppercase text-[10px]">03</div><h4 class="text-xl font-bold uppercase tracking-tight">Paving</h4></div>
+                    <div class="service-pod"><div class="text-blue-500 font-black mb-2 uppercase text-[10px]">04</div><h4 class="text-xl font-bold uppercase tracking-tight">Painting</h4></div>
+                    <div class="service-pod"><div class="text-blue-500 font-black mb-2 uppercase text-[10px]">05</div><h4 class="text-xl font-bold uppercase tracking-tight">Plumbing</h4></div>
+                    <div class="service-pod"><div class="text-blue-500 font-black mb-2 uppercase text-[10px]">06</div><h4 class="text-xl font-bold uppercase tracking-tight">Electrical</h4></div>
+                    <div class="service-pod"><div class="text-blue-500 font-black mb-2 uppercase text-[10px]">07</div><h4 class="text-xl font-bold uppercase tracking-tight">Tiling</h4></div>
+                    <div class="service-pod"><div class="text-blue-500 font-black mb-2 uppercase text-[10px]">08</div><h4 class="text-xl font-bold uppercase tracking-tight">Welding & Fabrication</h4></div>
+                    <div class="service-pod"><div class="text-blue-500 font-black mb-2 uppercase text-[10px]">09</div><h4 class="text-xl font-bold uppercase tracking-tight">Waterproofing</h4></div>
+                    <div class="service-pod"><div class="text-blue-500 font-black mb-2 uppercase text-[10px]">10</div><h4 class="text-xl font-bold uppercase tracking-tight">Rubble Removal</h4></div>
+                </div>
+            </div>
+
+            <!-- UNIFORM PHOTO GRID (6 photos for balance) -->
+            <div class="photo-grid">
+                <div class="photo-card"><img src="Photo1.jpg"></div>
+                <div class="photo-card"><img src="Photo2.jpg"></div>
+                <div class="photo-card"><img src="Photo3.jpg"></div>
+                <div class="photo-card"><img src="Photo4.jpg"></div>
+                <div class="photo-card"><img src="Photo5.jpg"></div>
+                <div class="photo-card"><img src="Photo6.jpg"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                <div class="glass p-10 flex flex-col justify-between">
+                    <span class="text-blue-500 font-black text-xs uppercase tracking-widest italic">Operations Radius</span>
+                    <p class="text-3xl font-black uppercase tracking-tighter leading-none italic">Durban <br>Coastal <br>Network.</p>
+                </div>
+                <div onclick="toggleContact()" class="click-me-tile glass p-10 flex flex-col justify-center items-center cursor-pointer hover:bg-blue-600 transition-all duration-500 group">
+                    <span class="text-5xl font-black uppercase group-hover:scale-110 transition tracking-tighter italic">CLICK ME</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SERVICES VIEW -->
+    <div id="services-view" class="max-w-7xl mx-auto py-10">
+        <div class="flex justify-between items-center mb-12">
+            <h2 class="text-6xl md:text-8xl font-black uppercase tracking-tighter italic">Precision <span class="text-blue-500">Solutions.</span></h2>
+            <button onclick="toggleView('home')" class="text-[10px] font-black uppercase tracking-[0.3em] hover:text-blue-500 transition p-4 glass rounded-full">← Back Home</button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass p-10 border-l-2 border-blue-500">
+                <h3 class="text-2xl font-black uppercase italic mb-4">01. Building & Structural</h3>
+                <p class="text-gray-400 leading-relaxed">High-stakes commercial alterations and residential expansions. We handle everything from foundation integrity to the final structural slab, ensuring every modification meets 2026 industrial safety codes.</p>
+            </div>
+            <div class="glass p-10 border-l-2 border-white">
+                <h3 class="text-2xl font-black uppercase italic mb-4">02. Master Carpentry</h3>
+                <p class="text-gray-400 leading-relaxed">Specialized woodwork including industrial roofing, custom decking, and precision joinery. We combine traditional grit with modern CNC-accurate cutting for flawless installations.</p>
+            </div>
+            <div class="glass p-10 border-l-2 border-blue-500">
+                <h3 class="text-2xl font-black uppercase italic mb-4">03. Industrial Paving</h3>
+                <p class="text-gray-400 leading-relaxed">Engineered for heavy-duty traffic. Our paving solutions for warehouses and driveways focus on sub-base compaction and drainage, preventing sinking and ensuring long-term durability.</p>
+            </div>
+            <div class="glass p-10 border-l-2 border-white">
+                <h3 class="text-2xl font-black uppercase italic mb-4">04. Precision Painting</h3>
+                <p class="text-gray-400 leading-relaxed">Using premium Plascon and Dulux industrial coatings. We provide weather-resistant exterior shielding and professional interior finishes for warehouses, offices, and homes.</p>
+            </div>
+            <div class="glass p-10 border-l-2 border-white">
+                <h3 class="text-2xl font-black uppercase italic mb-4">05. Commercial Plumbing</h3>
+                <p class="text-gray-400 leading-relaxed">Full-spectrum water systems, including high-pressure lines and sewer management. We handle everything from emergency leak detection to complete infrastructure overhaul.</p>
+            </div>
+            <div class="glass p-10 border-l-2 border-blue-500">
+                <h3 class="text-2xl font-black uppercase italic mb-4">06. Certified Electrical</h3>
+                <p class="text-gray-400 leading-relaxed">Commercial and residential wiring, fault finding, and compliance certification. We ensure safe, reliable power distribution for complex machinery and modern living spaces.</p>
+            </div>
+             <div class="glass p-10 border-l-2 border-blue-500">
+                <h3 class="text-2xl font-black uppercase italic mb-4">07. Tiling & Cladding</h3>
+                <p class="text-gray-400 leading-relaxed">Expert installation of industrial-grade porcelain, ceramic, and natural stone. Precision leveling and durable grouting for hygiene-critical and high-traffic areas.</p>
+            </div>
+             <div class="glass p-10 border-l-2 border-white">
+                <h3 class="text-2xl font-black uppercase italic mb-4">08. Welding & Fabrication</h3>
+                <p class="text-gray-400 leading-relaxed">On-site metalwork, including safety gates, structural steel repairs, and custom component fabrication. We work with steel, aluminum, and specialized alloys.</p>
+            </div>
+             <div class="glass p-10 border-l-2 border-white">
+                <h3 class="text-2xl font-black uppercase italic mb-4">09. Waterproofing</h3>
+                <p class="text-gray-400 leading-relaxed">Advanced membrane and liquid application systems for flat roofs, basements, and retaining walls. Protecting your assets from Durban’s challenging climate.</p>
+            </div>
+             <div class="glass p-10 border-l-2 border-blue-500">
+                <h3 class="text-2xl font-black uppercase italic mb-4">10. Rubble Removal</h3>
+                <p class="text-gray-400 leading-relaxed">Efficient site clearing and waste management services. We ensure your project site remains clean, safe, and compliant with local environmental regulations.</p>
+            </div>
+        </div>
+        <button onclick="toggleView('home')" class="mt-12 text-blue-500 font-bold uppercase tracking-widest hover:underline">← Return Home</button>
+    </div>
+
+    <!-- FOOTER (Shared) -->
+    <div class="max-w-7xl mx-auto">
+        <div class="glass overflow-hidden border-white/5 bg-white/[0.01] mb-20 rounded-[2.5rem]">
+            <div class="grid grid-cols-1 md:grid-cols-3 text-center">
+                <!-- Links updated with actual URLs and target="_blank" to open in new tab -->
+                <a href="https://www.instagram.com" target="_blank" class="p-10 border-r border-white/5 hover:bg-white/5 transition group">
+                    <span class="text-[10px] uppercase tracking-[0.5em] opacity-30 group-hover:text-blue-500 block mb-2">Instagram</span>
+                    <span class="text-xl font-black italic">@candcmain</span>
+                </a>
+                <a href="https://www.facebook.com" target="_blank" class="p-10 border-r border-white/5 hover:bg-white/5 transition group">
+                    <span class="text-[10px] uppercase tracking-[0.5em] opacity-30 group-hover:text-blue-500 block mb-2">Facebook</span>
+                    <span class="text-xl font-black italic">C&C Maintenance</span>
+                </a>
+                <a href="tel:+27315550123" class="p-10 hover:bg-white/5 transition group">
+                    <span class="text-[10px] uppercase tracking-[0.5em] opacity-30 group-hover:text-blue-500 block mb-2">Direct Line</span>
+                    <span class="text-xl font-black text-blue-500 underline">+27 31 555 0123</span>
+                </a>
+            </div>
+        </div>
+        <footer class="text-center py-10 opacity-10 text-[10px] tracking-[1.5em] uppercase border-t border-white/5">
+            C&C Maintenance // Durban // 2026 
+        </footer>
+    </div>
+
+    <!-- CONTACT OVERLAY -->
+    <div id="contact-page" class="flex flex-col items-center justify-center p-6 text-center">
+        <button onclick="toggleContact()" class="absolute top-10 right-10 text-4xl font-light opacity-30 hover:opacity-100 transition">✕</button>
+        <div class="max-w-2xl w-full">
+            <img src="Logo.jpg" alt="Logo" class="w-32 h-32 rounded-full mx-auto mb-10 border-2 border-blue-500 p-1">
+            <div class="glass overflow-hidden text-left border-white/10">
+                <a href="tel:+27315550123" class="flex justify-between items-center p-10 hover:bg-white/5 border-b border-white/5 transition group">
+                    <span class="text-xs font-bold uppercase opacity-40 group-hover:opacity-100 transition">Phone</span>
+                    <span class="text-2xl font-bold tracking-tighter group-hover:text-blue-500 transition">+27 31 555 0123</span>
+                </a>
+                <a href="https://www.instagram.com" target="_blank" class="flex justify-between items-center p-10 hover:bg-white/5 border-b border-white/5 transition group">
+                    <span class="text-xs font-bold uppercase opacity-40 group-hover:opacity-100 transition">Instagram</span>
+                    <span class="text-xl font-bold group-hover:text-blue-500 transition">@candcmain</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const marquee = document.getElementById('marquee');
+        marquee.innerHTML += marquee.innerHTML;
+
+        function toggleContact() {
+            const contact = document.getElementById('contact-page');
+            contact.style.display = (contact.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function toggleView(view) {
+            const home = document.getElementById('home-view');
+            const services = document.getElementById('services-view');
+            if (view === 'services') {
+                home.style.display = 'none';
+                services.style.display = 'block';
+            } else {
+                home.style.display = 'block';
+                services.style.display = 'none';
+            }
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
